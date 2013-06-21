@@ -116,27 +116,17 @@ is again calculated by averaging over the current number of processors in execut
 higher threads on the cluster produces skewed results. We scaled the processors from 2 – 32 on the
 cluster. Measuring techniques were similar as the ones used above.
 
-*****************************************Results**************************************************
-(See attached pdf for graphs and results)
-
 ***********************************Analysis of Experiments****************************************
 
 	The centralized barriers algorithm although lesser efficient shows pretty good results. The jedi nodes for
 running the Open MP algorithms is a 24 processor environment with 1 core each. If we scale up from 2
 to 8 the barrier shows varying results. We also scaled it upto 30 threads and the output seems to be
 somewhat misleading. We tested all algorithms with respect to the baseline barrier. Initially the
-tournament barrier used to lead to some weird and varied results. But after padding the structure with
-some extra space we feel the caches were fully occupied by each process running and thus no cache
-invalidation could occur. This would occur due to the shared data structure in Open MP. But a point to
-be noted is that the whole motive of these barriers are to avoid spinning and wasting time whereas
-when the losers in case of tournament are always spinning until awaken by their winner opponents.
-The Open MPI tournament barrier works on blocking send/receive. The problem we faced in this barrier
-was to validate the barrier. The print messages are completely out of synchronization due to fast
-context switching that will be taking place. Thus the ordering of print statements was disrupted. Also,
-the functions get_timeof_day() could be used to timestamp the arriving and leaving processes but again
-we would have to depend heavily on the fact that all processes hit the function at the same time. This
-could be guaranteed somewhat by ordering the threads using MPI_Barrier just before entering our own
-implemented barrier. This could lead to some correct validation of the barrier. Finally we tried to sleep
+tournament barrier used to lead to some weird and varied results. This would occur due to the shared data
+structure in Open MP. But a point to be noted is that the whole motive of these barriers are to avoid spinning
+and wasting time whereas the losers in case of tournament are always spinning until awaken by their winner opponents.
+The Open MPI tournament barrier works on blocking send/receive. Also, the functions get_timeof_day() could be 
+used to timestamp the arriving and leaving processes. Finally we tried to sleep
 between every iteration of barrier and printed the timestamps using the MPI_Wtime() function. This
 gave us some conclusive picture to the correctness of the barrier.
 
